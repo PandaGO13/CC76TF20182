@@ -20,30 +20,6 @@ def haversine(lat1, lon1, lat2, lon2):
     distancia=2*R*math.asin(math.sqrt(a))
     return distancia
 
-def GenerarGrafo(lista):
-    
-    G = [[] for _ in range(len(lista))]
-
-    for i in range(len(lista)):
-        u = lista[i]
-        
-        dmax = 100
-        
-        while(len(G[i])< 2):
-            
-            for j in range(len(lista)):
-                v = lista[j]
-                
-                d = round(haversine(u[1], u[2], v[1], v[2]), 2)
-                
-                if d > 0 and d < dmax and not j in G[i]:
-                    G[i].append(j)
-                    G[j].append(i)
-                    
-            dmax += 100
-    
-    return G
-
 def find(ds, a):
     if ds[a] == a:
         return a
@@ -80,23 +56,42 @@ def sets(G):
     else:
         print("No estamos unidos :(")
 
-def CP_Regionales():
+def generarGrafo(filename):
 
-    CPdoc = oxl.load_workbook("CR_25.xlsx")
+    CPdoc = oxl.load_workbook(filename)
 
     hoja = CPdoc[CPdoc.sheetnames[0]]
 
     RLista = []
 
     for fila in hoja.rows:
-        if fila[7].value == "1":
-            RLista.append([fila[5].value, fila[16].value, fila[15].value])
+        RLista.append([fila[5].value, fila[16].value, fila[15].value])
     
-    G = GenerarGrafo(RLista)
+    G = [[] for _ in range(len(RLista))]
+
+    for i in range(len(RLista)):
+        
+        u = RLista[i]
+        
+        dmax = 100
+        
+        while(len(G[i])< 2):
+            
+            for j in range(len(RLista)):
+                v = RLista[j]
+                
+                d = round(haversine(u[1], u[2], v[1], v[2]), 2)
+                
+                if d > 0 and d < dmax and not j in G[i]:
+                    G[i].append(j)
+                    G[j].append(i)
+                    
+            dmax += 100
 
 #    sets(G)
     
     return G
+   
     
-print(CP_Regionales())
+print(generarGrafo("CR_25.xlsx"))
     
