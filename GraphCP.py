@@ -20,42 +20,6 @@ def haversine(lat1, lon1, lat2, lon2):
     distancia=2*R*math.asin(math.sqrt(a))
     return distancia
 
-def find(ds, a):
-    if ds[a] == a:
-        return a
-    else:
-        parent = find(ds, ds[a])
-        ds[a] = parent
-        return parent
-        
-def unionQF(ds, a, b):
-    pa = find(ds, a)
-    pb = find(ds, b)
-    
-    if pa != pb:
-        for i in range(len(ds)):
-            if ds[i] == pb:
-                ds[i] = pa
-
-def sets(G):
-    n = len(G)
-    
-    ds = [i for i in range(n)]
-
-    for u in range(n):
-        for v in G[u]:
-            pu = find(ds, u)
-            pv = find(ds, v)
-            
-            unionQF(ds, pu, pv)
-
-    print(ds)
-   
-    if ds[1:] == ds[:-1]:
-        print("Estamos unidos.")
-    else:
-        print("No estamos unidos :(")
-
 def generarGrafo(filename):
 
     CPdoc = oxl.load_workbook(filename)
@@ -87,11 +51,13 @@ def generarGrafo(filename):
                     G[j].append(i)
                     
             dmax += 100
-
-#    sets(G)
-    
+            
     return G
    
-    
-print(generarGrafo("CR_25.xlsx"))
-    
+
+print(generarGrafo("CR_25.xlsx")) #segundos
+#print(generarGrafo("CP_171.xlsx")) #segundos
+#print(generarGrafo("CD_1678.xlsx")) #1 min aprox
+#print(generarGrafo("CP_143351.xlsx")) #casi 15 min 
+
+   
